@@ -1,0 +1,24 @@
+{
+  "name": "bigredhack",
+  "version": "1.0.0",
+  "description": "Big Red Hackathon 2021",
+  "main": "NFTapi.js",
+  "scripts": {
+    "start": "echo \"hello\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aneogi007/BigRedHack.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aneogi007/BigRedHack/issues"
+  },
+  "homepage": "https://github.com/aneogi007/BigRedHack#readme",
+  "dependencies": {
+    "api": "^3.4.0",
+    "request": "^2.88.2"
+  }
+}
