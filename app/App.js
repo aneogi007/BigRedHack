@@ -1,171 +1,170 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, TextInput, Button, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
+import React, { Component, useState, useRef } from 'react';
+import { StyleSheet, View, Alert, FlatList, Text, Image, SafeAreaView, TouchableOpacity, Modal, Pressable } from 'react-native';
+// import { PinchGestureHandler } from 'react-native-gesture-handler'
+// import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+// import { render } from 'react-dom';
 
+
+const DATA = [
+  {
+    id: '1',
+    imgUrl:
+      'https://s.gravatar.com/avatar/b4185aac47f6262b40dc8f11535a32c0?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fjs.png',
+  },
+  {
+    id: '2',
+    imgUrl:
+      'https://pbs.twimg.com/profile_images/1359263677661261827/CIb2NnAN_400x400.jpg',
+  },
+  {
+    id: '3',
+    imgUrl:
+      'https://oto.wustl.edu/wp-content/uploads/2020/05/Youssef-Stephanie-280x386.jpg',
+  },
+];
 
 export default function App() {
-  const [shouldShow, setShouldShow] = useState(true);
+  const [elementIndex, setElementIndex] = useState(0)
 
-  const viewImage = (props) => {
-    setShouldShow(false),
+  // const scale = useRef(new Animated.Value(0)).current;
+  // const handlePinch = Animated.event([{ nativeEvent: {scale} }]);
 
-      Alert.alert(
-        "Open Image in AR",
-        "",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel"
-          },
-          { text: "OK", onPress: () => console.log("OK Pressed") }
-        ]
-      );
+  const [modalVisible, setModalVisible] = useState(false);
 
-  }
+  // const onPressActionOne = () => {
+  //   setModalVisible(!modalVisible)
+  // }
+
+  // const onPressActionOne = () => {
+  //   setElementIndex(index)
+  // }
+
+
+
 
   return (
-
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
 
-
-        {shouldShow ? (
-          <><TouchableOpacity onPress={viewImage}>
-
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
             <Image
-              source={{
-                uri: 'https://lh3.googleusercontent.com/aACt-5nKgxag0Joe54qjDgPeaqsnHhirHDl8VW4LCaBMnxDIFtGe1rVW2HbkL9Je77uQ60gDe9fBpbuWIpW9PZqDGrg_68mtpdoVZw=s0',
-              }}
-              style={{ flex: 1, height: 300, width: 300, marginBottom: 10, marginTop: 10 }}
-              resizeMode='contain' />
-
-
-
-          </TouchableOpacity>
-
-            <TouchableOpacity>
-              <Image
-                source={{
-                  uri: 'https://lh3.googleusercontent.com/aACt-5nKgxag0Joe54qjDgPeaqsnHhirHDl8VW4LCaBMnxDIFtGe1rVW2HbkL9Je77uQ60gDe9fBpbuWIpW9PZqDGrg_68mtpdoVZw=s0',
-                }}
-                style={{ flex: 1, height: 300, width: 300, marginBottom: 10, marginTop: 10 }}
-                resizeMode='contain' />
-            </TouchableOpacity><TouchableOpacity>
-              <Image
-                source={{
-                  uri: 'https://lh3.googleusercontent.com/aACt-5nKgxag0Joe54qjDgPeaqsnHhirHDl8VW4LCaBMnxDIFtGe1rVW2HbkL9Je77uQ60gDe9fBpbuWIpW9PZqDGrg_68mtpdoVZw=s0',
-                }}
-                style={{ flex: 1, height: 300, width: 300, marginBottom: 10, marginTop: 10 }}
-                resizeMode='contain' />
-            </TouchableOpacity></>
-
-        ) :
-
-          <View style={styles.container}>
-            <Button
-              onPress={() => {
-                setShouldShow(true);
-              }}
-              title={"Back"}
-              color='#007AFF' />
+              source={{ uri: DATA[elementIndex].imgUrl }}
+              style={{ height: 300, width: 300 }}
+              resizeMode="contain"
+            />
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Close</Text>
+            </Pressable>
           </View>
+        </View>
+      </Modal>
 
-        }
+
+      <FlatList
+
+        data={DATA}
+        inverted
+        keyExtriactor={(time, index) => index.toString()}
+        renderItem={({ item, index }) => {
 
 
-      </ScrollView>
+          return (
+            <View>
+
+              <View style={styles.container}>
+                <View style={{ margin: 10 }}>
+                  {item.imgUrl && (
+                    <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+
+                      <Image
+                        source={{ uri: item.imgUrl }}
+                        style={{ height: 300, width: 300 }}
+                        resizeMode="contain"
+                        onpress={() => setElementIndex(index)}
+
+                      />
+                    </TouchableOpacity>
+                  )}
+
+                </View>
+              </View>
+            </View>
+          );
+        }}
+
+      />
+
     </SafeAreaView>
-
-
 
   );
 }
 
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  TextInput: {
-    height: 50,
-    flex: 1,
-    padding: 10,
-    marginLeft: 20,
-  },
-
-  scrollView: {
-    marginHorizontal: 40,
-  },
-
   item: {
-    flex: 1,
-    overflow: 'hidden',
-    alignItems: 'center',
-    backgroundColor: 'blue',
-    position: 'relative',
-    margin: 10
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
-
-  image: {
-    flex: 1
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
   }
-
-
 });
-
-
-// Try 1
-
-// const Example = () => {
-//   const [shouldShow, setShouldShow] = useState(true);
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [flexDirection, setflexDirection] = useState("column");
-
-//   {
-//     shouldShow ? (
-//       <><><View style={styles.inputView}>
-//         <TextInput
-//           style={{ height: 40 }}
-//           placeholder="Email"
-//           onChangeText={email => setEmail(email)}
-//           defaultValue={email} />
-//       </View><View style={styles.inputView}>
-//           <TextInput
-//             style={{ height: 40 }}
-//             placeholder="Password"
-//             onChangeText={password => setPassword(password)}
-//             defaultValue={password}
-//             secureTextEntry={true} />
-//         </View></>
-
-//         <Button
-//           onPress={() => {
-//             setShouldShow(false)
-//           }}
-//           title={"Confirm"}
-//           color='#007AFF' /></>
-
-//     ) :
-
-//       <><Image
-//         source={{
-//           uri: 'https://lh3.googleusercontent.com/aACt-5nKgxag0Joe54qjDgPeaqsnHhirHDl8VW4LCaBMnxDIFtGe1rVW2HbkL9Je77uQ60gDe9fBpbuWIpW9PZqDGrg_68mtpdoVZw=s0',
-//         }}
-//         style={{ width: 800, height: 1000 }} />
-
-//         <Button
-//           onPress={() => {
-//             setShouldShow(true);
-//           }}
-//           title={"Back"}
-//           color='#007AFF' /></>
-//   }
-// }
